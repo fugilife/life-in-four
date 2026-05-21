@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Life in Four · Rooted</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Noto+Serif+TC:wght@300;400;500&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FAF7F2;--cream-dark:#F0E8DC;
+  --brown:#3D2B1F;--brown-mid:#6B4A36;--brown-light:#9A7A68;
+  --green:#6B8F6B;--green-light:#8FAF8F;--green-pale:#E8F0E8;
+  --wood:#A67C5B;--wood-light:#C9A882;--wood-pale:#F5EDE0;
+  --rose:#C4826A;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--brown);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;}
+.page{display:none;min-height:100vh;position:relative;}
+.page.active{display:block;}
+.deco{position:absolute;pointer-events:none;z-index:0;}
+.page-content{position:relative;z-index:1;}
+
+/* INTRO */
+#page-intro{overflow:hidden;}
+.intro-center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:100vh;padding:60px 28px;max-width:420px;margin:0 auto;}
+.intro-title{font-family:'Cormorant Garamond',serif;font-size:clamp(40px,10vw,62px);font-weight:300;font-style:italic;color:var(--brown);line-height:1.05;letter-spacing:.02em;animation:up 1s ease both;}
+.intro-rooted{font-family:'Lato',sans-serif;font-size:11px;font-weight:300;letter-spacing:.32em;color:var(--green);text-transform:uppercase;margin-top:6px;animation:up 1s .12s ease both;}
+.intro-rule{width:44px;height:1px;background:var(--wood-light);margin:26px auto;animation:up 1s .2s ease both;}
+.intro-body{font-size:15px;line-height:2;color:var(--brown-mid);font-weight:300;margin-bottom:14px;animation:up 1s .28s ease both;}
+.intro-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--brown-light);letter-spacing:.06em;margin-bottom:38px;animation:up 1s .36s ease both;}
+.four-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px;animation:up 1s .44s ease both;}
+.pill{padding:7px 16px;border:1px solid rgba(166,124,91,.3);font-size:13px;color:var(--brown-mid);font-weight:300;letter-spacing:.06em;border-radius:30px;}
+.btn-start{padding:15px 52px;background:var(--brown);color:var(--cream);font-family:'Noto Serif TC',serif;font-size:14px;font-weight:300;letter-spacing:.18em;border:none;cursor:pointer;transition:background .3s;animation:up 1s .52s ease both;}
+.btn-start:hover{background:var(--brown-mid);}
+.fugi-tag{margin-top:24px;font-family:'Lato',sans-serif;font-size:10px;letter-spacing:.22em;color:var(--brown-light);animation:up 1s .58s ease both;}
+
+/* QUIZ */
+#page-quiz{overflow:hidden;}
+.quiz-wrap{max-width:520px;margin:0 auto;padding:50px 24px 80px;}
+.quiz-brand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--brown-light);text-align:center;}
+.quiz-step{font-family:'Lato',sans-serif;font-size:11px;letter-spacing:.2em;color:var(--green);text-transform:uppercase;text-align:center;margin-top:4px;margin-bottom:28px;}
+.prog-track{height:1px;background:var(--cream-dark);margin-bottom:10px;position:relative;}
+.prog-bar{height:100%;background:var(--green);transition:width .5s ease;position:relative;}
+.prog-bar::after{content:'';position:absolute;right:-4px;top:-3px;width:7px;height:7px;border-radius:50%;background:var(--green);}
+.prog-dots{display:flex;justify-content:space-between;margin-bottom:28px;}
+.pdot{display:flex;flex-direction:column;align-items:center;gap:4px;font-family:'Lato',sans-serif;font-size:10px;color:var(--brown-light);letter-spacing:.08em;}
+.pdot-circle{width:22px;height:22px;border-radius:50%;border:1px solid var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:12px;background:var(--cream);transition:all .3s;}
+.pdot.done .pdot-circle{background:var(--green);border-color:var(--green);}
+.pdot.active .pdot-circle{border-color:var(--wood);}
+
+/* Dimension intro card */
+.dim-intro{background:rgba(255,252,248,.85);border:1px solid rgba(166,124,91,.22);border-bottom:none;padding:20px 22px 18px;}
+.dim-intro-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.dim-emoji{font-size:26px;line-height:1;}
+.dim-name{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--brown);letter-spacing:.04em;}
+.dim-name-sub{font-size:11px;color:var(--green);font-family:'Lato',sans-serif;letter-spacing:.1em;margin-top:2px;}
+.dim-definition{font-size:13px;line-height:1.95;color:var(--brown-mid);font-weight:300;padding:14px 16px;background:var(--wood-pale);border-left:2px solid var(--wood-light);margin-bottom:12px;}
+.dim-definition strong{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--brown);font-weight:400;}
+.dim-prompt{font-size:12px;line-height:1.8;color:var(--brown-light);font-family:'Lato',sans-serif;font-weight:300;letter-spacing:.04em;}
+
+/* Question block */
+.q-block{background:rgba(255,252,248,.55);border:1px solid rgba(166,124,91,.14);border-top:none;padding:20px 22px 16px;margin-bottom:4px;animation:up .5s ease both;}
+.q-num{font-family:'Lato',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--green);text-transform:uppercase;margin-bottom:8px;}
+.q-text{font-size:14px;line-height:1.85;color:var(--brown);margin-bottom:13px;}
+.choices{display:flex;flex-direction:column;gap:7px;}
+.choice{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;background:transparent;border:1px solid rgba(166,124,91,.2);cursor:pointer;text-align:left;width:100%;font-family:'Noto Serif TC',serif;transition:all .2s;}
+.choice:hover{background:var(--wood-pale);border-color:var(--wood-light);}
+.choice.sel{background:var(--green-pale);border-color:var(--green);}
+.c-letter{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--wood);min-width:16px;line-height:1.6;font-style:italic;font-weight:500;}
+.choice.sel .c-letter{color:var(--green);}
+.c-text{font-size:13px;line-height:1.7;color:var(--brown-mid);font-weight:300;}
+.choice.sel .c-text{color:var(--brown);}
+.sep{height:22px;display:flex;align-items:center;gap:10px;margin:2px 0;}
+.sep-line{flex:1;height:1px;background:rgba(166,124,91,.1);}
+.sep-dot{color:var(--green);font-size:12px;opacity:.5;}
+
+/* Self-score block */
+.self-score-block{background:rgba(255,252,248,.7);border:1px solid rgba(166,124,91,.2);border-top:none;padding:22px 22px 20px;margin-bottom:4px;animation:up .5s ease both;}
+.ss-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--brown);margin-bottom:4px;}
+.ss-sub{font-size:12px;color:var(--brown-light);font-family:'Lato',sans-serif;font-weight:300;letter-spacing:.04em;margin-bottom:18px;}
+.ss-suggest{font-size:12px;color:var(--green);font-family:'Lato',sans-serif;font-weight:300;letter-spacing:.04em;margin-bottom:14px;}
+.ss-suggest span{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--green);font-style:italic;}
+.ss-slider-wrap{padding-bottom:4px;}
+.ss-display{text-align:center;margin-bottom:10px;}
+.ss-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--brown);line-height:1;transition:color .3s;}
+.ss-num-label{font-family:'Lato',sans-serif;font-size:10px;letter-spacing:.15em;color:var(--brown-light);margin-top:2px;}
+.ss-track{height:2px;background:var(--cream-dark);position:relative;margin-bottom:6px;}
+.ss-fill{position:absolute;left:0;top:0;height:100%;background:var(--wood);transition:width .1s;}
+input.ss-range{position:absolute;top:-8px;left:0;width:100%;height:20px;background:transparent;-webkit-appearance:none;appearance:none;outline:none;cursor:pointer;}
+input.ss-range::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--cream);border:2px solid var(--wood);cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(61,43,31,.15);}
+input.ss-range::-webkit-slider-thumb:hover{background:var(--wood-pale);transform:scale(1.12);}
+input.ss-range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--cream);border:2px solid var(--wood);cursor:pointer;}
+.ss-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--brown-light);font-family:'Lato',sans-serif;font-weight:300;letter-spacing:.06em;margin-top:10px;}
+
+/* Nav */
+.quiz-nav{display:flex;gap:12px;margin-top:14px;}
+.btn-back{padding:14px 22px;background:transparent;border:1px solid rgba(61,43,31,.2);color:var(--brown-light);font-family:'Noto Serif TC',serif;font-size:13px;font-weight:300;letter-spacing:.1em;cursor:pointer;transition:all .25s;}
+.btn-back:hover{border-color:var(--brown-light);color:var(--brown);}
+.btn-next{flex:1;padding:15px;background:var(--brown);color:var(--cream);border:none;font-family:'Noto Serif TC',serif;font-size:14px;font-weight:300;letter-spacing:.16em;cursor:pointer;transition:background .25s;opacity:.35;pointer-events:none;}
+.btn-next.on{opacity:1;pointer-events:all;}
+.btn-next.on:hover{background:var(--brown-mid);}
+
+/* RESULT */
+#page-result{overflow:hidden;}
+.result-wrap{max-width:520px;margin:0 auto;padding:50px 24px 80px;}
+.result-brand{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--brown-light);text-align:center;}
+.result-sub{font-family:'Lato',sans-serif;font-size:11px;letter-spacing:.22em;color:var(--green);text-transform:uppercase;text-align:center;margin-top:4px;margin-bottom:28px;}
+
+/* Share card */
+.share-card{aspect-ratio:1/1;background:var(--cream);border:1px solid rgba(166,124,91,.28);padding:30px 26px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;margin-bottom:24px;animation:up .7s ease both;}
+.card-deco{position:absolute;pointer-events:none;}
+.card-tl{top:-8px;left:-8px;width:130px;opacity:.48;}
+.card-tr{top:-8px;right:-8px;width:118px;opacity:.4;transform:scaleX(-1);}
+.card-bl{bottom:-8px;left:-8px;width:108px;opacity:.36;transform:scaleY(-1);}
+.card-br{bottom:-8px;right:-8px;width:118px;opacity:.4;transform:scale(-1,-1);}
+.card-head{text-align:center;position:relative;z-index:2;}
+.card-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(24px,6vw,34px);font-weight:300;color:var(--brown);line-height:1;}
+.card-stitle{font-family:'Lato',sans-serif;font-size:9px;letter-spacing:.28em;color:var(--green);text-transform:uppercase;margin-top:5px;}
+.card-chart{display:flex;justify-content:center;align-items:center;position:relative;z-index:2;flex:1;padding:6px 0;}
+.card-bars{display:grid;grid-template-columns:1fr 1fr;gap:9px 22px;position:relative;z-index:2;}
+.bar-item{}
+.bar-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;}
+.bar-name{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--brown);letter-spacing:.04em;}
+.bar-num{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--brown-light);line-height:1;}
+.bar-track{height:2px;background:var(--cream-dark);position:relative;}
+.bar-fill{position:absolute;left:0;top:0;height:100%;transition:width 1s ease;}
+.bw{background:var(--wood);}.bp{background:var(--green);}.bl{background:var(--rose);}.bh{background:var(--green-light);}
+.card-foot{text-align:center;position:relative;z-index:2;}
+.card-preview{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;line-height:1.8;color:var(--brown-mid);padding:0 6px;margin-bottom:7px;}
+.card-cta{font-family:'Lato',sans-serif;font-size:9px;letter-spacing:.18em;color:var(--brown-light);text-transform:uppercase;margin-bottom:3px;}
+.card-handle{font-family:'Lato',sans-serif;font-size:9px;letter-spacing:.22em;color:var(--brown-light);text-transform:uppercase;}
+
+/* Page CTA block */
+.page-cta{
+  border:1px solid rgba(166,124,91,.2);
+  background:var(--wood-pale);
+  padding:26px 24px;
+  margin-bottom:22px;
+  text-align:center;
+  animation:up .7s .68s ease both;
+}
+.page-cta-text{
+  font-size:14px;line-height:1.9;
+  color:var(--brown-mid);font-weight:300;
+  margin-bottom:16px;
+}
+.page-cta-text em{
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic;font-size:16px;color:var(--brown);
+}
+.btn-threads{
+  display:inline-block;
+  padding:12px 32px;
+  background:var(--brown);color:var(--cream);
+  font-family:'Lato',sans-serif;font-size:11px;
+  font-weight:300;letter-spacing:.2em;
+  text-transform:uppercase;text-decoration:none;
+  transition:background .3s;
+}
+.btn-threads:hover{background:var(--brown-mid);}
+
+/* Share hint */
+/* Share hint */
+.share-hint{
+  display:none;
+  background:var(--green-pale);
+  border:1px solid rgba(107,143,107,.5);
+  border-left:3px solid var(--green);
+  padding:16px 20px;
+  margin-bottom:16px;
+  text-align:center;
+}
+.share-hint p{font-size:13px;line-height:1.9;color:var(--brown-mid);font-weight:300;}
+.share-hint strong{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;color:var(--green);}
+.share-hint.visible{display:block;}
+
+/* Insight */
+.insight-box{border:1px solid rgba(166,124,91,.18);background:rgba(255,252,248,.7);padding:28px 24px;margin-bottom:18px;animation:up .7s .2s ease both;}
+.box-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;letter-spacing:.16em;color:var(--green);text-align:center;margin-bottom:18px;}
+.insight-body{font-size:14px;line-height:2.1;color:var(--brown);font-weight:300;}
+.insight-body p{margin-bottom:13px;}
+.insight-body p:last-child{margin-bottom:0;}
+.insight-pull{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--brown-mid);line-height:1.75;border-left:2px solid var(--wood-light);padding-left:16px;margin:18px 0;}
+
+/* Prompts */
+.prompt-box{border:1px solid rgba(166,124,91,.14);background:rgba(255,252,248,.5);padding:24px 22px;margin-bottom:18px;animation:up .7s .32s ease both;}
+.prompt-list{list-style:none;}
+.prompt-list li{font-size:13px;line-height:1.9;color:var(--brown-mid);font-weight:300;padding:9px 0 9px 18px;position:relative;border-bottom:1px solid rgba(166,124,91,.1);}
+.prompt-list li:last-child{border-bottom:none;}
+.prompt-list li::before{content:'·';position:absolute;left:3px;color:var(--green);font-size:20px;line-height:1.3;}
+
+/* Reflect */
+.reflect-box{border:1px solid rgba(166,124,91,.18);background:rgba(255,252,248,.6);padding:26px 22px;margin-bottom:18px;animation:up .7s .44s ease both;}
+.reflect-intro{font-size:13px;line-height:1.9;color:var(--brown-mid);font-weight:300;text-align:center;margin-bottom:18px;}
+.reflect-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}
+.rc{background:var(--cream);border:1px solid rgba(166,124,91,.15);padding:13px 13px 11px;}
+.rc-icon{font-size:15px;margin-bottom:5px;}
+.rc-name{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--brown);letter-spacing:.04em;margin-bottom:5px;}
+.rc-score{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--brown-light);line-height:1;margin-bottom:7px;}
+.rc-bar{height:2px;background:var(--cream-dark);margin-bottom:7px;position:relative;}
+.rc-fill{position:absolute;left:0;top:0;height:100%;width:0;transition:width 1s ease;}
+.rc-feel{font-size:11px;color:var(--brown-light);font-family:'Lato',sans-serif;font-weight:300;letter-spacing:.05em;}
+.balance-note{background:var(--green-pale);border-left:2px solid var(--green);padding:13px 15px;margin-bottom:18px;font-size:13px;line-height:1.85;color:var(--brown-mid);font-weight:300;}
+.balance-note strong{font-weight:500;color:var(--brown);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:15px;}
+.rq-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--green);text-align:center;letter-spacing:.1em;margin-bottom:13px;}
+.rq-list{list-style:none;}
+.rq-list li{font-size:13px;line-height:1.9;color:var(--brown-mid);font-weight:300;padding:9px 0 9px 18px;position:relative;border-bottom:1px solid rgba(166,124,91,.08);}
+.rq-list li:last-child{border-bottom:none;}
+.rq-list li::before{content:'·';position:absolute;left:3px;color:var(--wood);font-size:20px;line-height:1.3;}
+
+/* Book card */
+.book-card{overflow:hidden;border:1px solid rgba(166,124,91,.28);margin-bottom:22px;animation:up .7s .56s ease both;}
+.book-inner{display:flex;}
+.book-spine{width:5px;background:linear-gradient(180deg,var(--wood),var(--wood-light));flex-shrink:0;}
+.book-body{padding:20px 20px 18px;flex:1;background:var(--wood-pale);}
+.book-eye{font-family:'Lato',sans-serif;font-size:9px;letter-spacing:.28em;color:var(--green);text-transform:uppercase;margin-bottom:9px;}
+.book-title-tx{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--brown);line-height:1.3;margin-bottom:4px;letter-spacing:.02em;}
+.book-auth{font-family:'Lato',sans-serif;font-size:11px;color:var(--brown-light);font-weight:300;letter-spacing:.08em;margin-bottom:11px;}
+.book-auth em{font-style:italic;font-family:'Cormorant Garamond',serif;font-size:13px;}
+.book-rule{width:30px;height:1px;background:var(--wood-light);margin-bottom:11px;}
+.book-desc{font-size:12px;line-height:1.85;color:var(--brown-mid);font-weight:300;}
+
+/* Result nav */
+.result-nav{display:flex;gap:12px;margin-bottom:18px;animation:up .7s .64s ease both;}
+.btn-ig{flex:1;padding:15px;background:var(--green);color:var(--cream);border:none;font-family:'Noto Serif TC',serif;font-size:13px;font-weight:300;letter-spacing:.12em;cursor:pointer;transition:background .3s;}
+.btn-ig:hover{background:var(--green-light);}
+.btn-redo{flex:1;padding:15px;background:transparent;color:var(--brown);border:1px solid rgba(61,43,31,.25);font-family:'Noto Serif TC',serif;font-size:13px;font-weight:300;letter-spacing:.12em;cursor:pointer;transition:all .3s;}
+.btn-redo:hover{background:var(--wood-pale);}
+.result-foot{text-align:center;font-family:'Lato',sans-serif;font-size:10px;letter-spacing:.2em;color:var(--brown-light);animation:up .7s .7s ease both;}
+
+@keyframes up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@media(max-width:380px){.share-card{padding:22px 16px;}.card-tl,.card-tr{width:100px;}.card-bl,.card-br{width:88px;}.choice{padding:10px 11px;}}
+</style>
+</head>
+<body>
+
+<!-- SVG SYMBOLS -->
+<svg style="display:none">
+<defs>
+<symbol id="sb" viewBox="0 0 200 200">
+  <g fill="none" stroke="#6B8F6B" stroke-linecap="round">
+    <path d="M18,185 Q55,145 75,105 Q95,65 85,18" stroke-width="1.3"/>
+    <path d="M75,105 Q108,88 128,62" stroke-width="1"/>
+    <path d="M75,105 Q46,84 36,56" stroke-width="1"/>
+    <path d="M60,133 Q88,118 102,96" stroke-width=".9"/>
+    <path d="M60,133 Q40,112 30,88" stroke-width=".9"/>
+    <path d="M85,75 Q112,62 122,40" stroke-width=".85"/>
+    <ellipse cx="128" cy="62" rx="11" ry="6" fill="#8FAF8F" fill-opacity=".35" stroke="none" transform="rotate(-28,128,62)"/>
+    <ellipse cx="36" cy="56" rx="9" ry="5" fill="#8FAF8F" fill-opacity=".3" stroke="none" transform="rotate(18,36,56)"/>
+    <ellipse cx="102" cy="96" rx="8" ry="5" fill="#8FAF8F" fill-opacity=".28" stroke="none" transform="rotate(-14,102,96)"/>
+    <ellipse cx="122" cy="40" rx="7" ry="4" fill="#8FAF8F" fill-opacity=".3" stroke="none" transform="rotate(-38,122,40)"/>
+  </g>
+</symbol>
+<symbol id="sf" viewBox="0 0 200 200">
+  <g fill="none" stroke="#6B8F6B" stroke-linecap="round">
+    <path d="M100,192 Q94,150 78,112 Q62,72 46,38" stroke-width="1.4"/>
+    <path d="M78,112 Q62,102 52,86" stroke-width=".9"/>
+    <path d="M78,112 Q90,100 96,84" stroke-width=".9"/>
+    <path d="M68,132 Q52,122 44,106" stroke-width=".8"/>
+    <path d="M68,132 Q80,120 86,104" stroke-width=".8"/>
+    <ellipse cx="46" cy="38" rx="7" ry="11" fill="#8FAF8F" fill-opacity=".2" stroke="none" transform="rotate(-22,46,38)"/>
+  </g>
+</symbol>
+<symbol id="sw" viewBox="0 0 200 200">
+  <g stroke-linecap="round">
+    <line x1="42" y1="185" x2="48" y2="132" stroke="#A67C5B" stroke-width="1"/>
+    <circle cx="48" cy="126" r="3" fill="#C9A882" opacity=".65"/>
+    <circle cx="44" cy="121" r="2" fill="#C9A882" opacity=".5"/>
+    <circle cx="51" cy="120" r="2" fill="#C4826A" opacity=".5"/>
+    <line x1="75" y1="188" x2="82" y2="136" stroke="#6B8F6B" stroke-width="1"/>
+    <circle cx="82" cy="130" r="4" fill="none" stroke="#8FAF8F" stroke-width="1"/>
+    <circle cx="82" cy="130" r="2" fill="#8FAF8F" opacity=".5"/>
+    <line x1="115" y1="184" x2="110" y2="138" stroke="#A67C5B" stroke-width="1"/>
+    <g transform="translate(110,133)">
+      <circle cx="0" cy="-5" r="3" fill="#E8C4C4" opacity=".6"/>
+      <circle cx="5" cy="0" r="3" fill="#E8C4C4" opacity=".6"/>
+      <circle cx="0" cy="5" r="3" fill="#E8C4C4" opacity=".6"/>
+      <circle cx="-5" cy="0" r="3" fill="#E8C4C4" opacity=".6"/>
+      <circle cx="0" cy="0" r="2" fill="#C4826A" opacity=".65"/>
+    </g>
+    <line x1="148" y1="188" x2="154" y2="148" stroke="#6B8F6B" stroke-width="1"/>
+    <circle cx="154" cy="142" r="3" fill="#6B8F6B" opacity=".5"/>
+    <path d="M42,162 Q28,152 22,138" stroke="#6B8F6B" stroke-width="1" fill="none"/>
+    <path d="M82,158 Q94,150 102,138" stroke="#6B8F6B" stroke-width="1" fill="none"/>
+  </g>
+</symbol>
+</defs>
+</svg>
+
+<!-- PAGE 1: INTRO -->
+<div class="page active" id="page-intro">
+  <svg class="deco" style="top:-10px;left:-10px;width:210px;height:210px;opacity:.5" viewBox="0 0 200 200"><use href="#sb"/></svg>
+  <svg class="deco" style="top:-10px;right:-10px;width:190px;height:190px;opacity:.4;transform:scaleX(-1)" viewBox="0 0 200 200"><use href="#sf"/></svg>
+  <svg class="deco" style="bottom:-10px;left:-10px;width:180px;height:180px;opacity:.35;transform:scaleY(-1)" viewBox="0 0 200 200"><use href="#sw"/></svg>
+  <svg class="deco" style="bottom:-10px;right:-10px;width:190px;height:190px;opacity:.38;transform:scale(-1,-1)" viewBox="0 0 200 200"><use href="#sb"/></svg>
+  <div class="page-content">
+    <div class="intro-center">
+      <div class="intro-title">Life in Four</div>
+      <div class="intro-rooted">Rooted · 認識此刻的你</div>
+      <div class="intro-rule"></div>
+      <p class="intro-body">工作、遊戲、愛、健康——<br>四個面向，照見你生命的現在。<br>不評判，不比較，只是誠實地看見。</p>
+      <p class="intro-quote">"There is no one right life." — Designing Your Life</p>
+      <div class="four-pills">
+        <span class="pill">💼 工作</span>
+        <span class="pill">🌿 遊戲</span>
+        <span class="pill">🌸 愛</span>
+        <span class="pill">🍃 健康</span>
+      </div>
+      <button class="btn-start" onclick="startQuiz()">開始評估 →</button>
+      <div class="fugi-tag">@fugilife</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: QUIZ -->
+<div class="page" id="page-quiz">
+  <svg class="deco" style="top:-10px;left:-10px;width:150px;height:150px;opacity:.22" viewBox="0 0 200 200"><use href="#sb"/></svg>
+  <svg class="deco" style="bottom:-10px;right:-10px;width:140px;height:140px;opacity:.18;transform:scale(-1,-1)" viewBox="0 0 200 200"><use href="#sw"/></svg>
+  <div class="page-content">
+    <div class="quiz-wrap" id="quizWrap">
+      <div class="quiz-brand">Life in Four</div>
+      <div class="quiz-step" id="stepLabel">此刻的你，誠實地填</div>
+      <div class="prog-track"><div class="prog-bar" id="progBar" style="width:0%"></div></div>
+      <div class="prog-dots">
+        <div class="pdot active" id="pd0"><div class="pdot-circle">💼</div><span>工作</span></div>
+        <div class="pdot" id="pd1"><div class="pdot-circle">🌿</div><span>遊戲</span></div>
+        <div class="pdot" id="pd2"><div class="pdot-circle">🌸</div><span>愛</span></div>
+        <div class="pdot" id="pd3"><div class="pdot-circle">🍃</div><span>健康</span></div>
+      </div>
+      <div id="qArea"></div>
+      <div class="quiz-nav">
+        <button class="btn-back" id="btnBack" onclick="prevSec()" style="display:none">← 上一步</button>
+        <button class="btn-next" id="btnNext" onclick="nextSec()"><span id="btnTxt">繼續 →</span></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: RESULT -->
+<div class="page" id="page-result">
+  <svg class="deco" style="top:-10px;left:-10px;width:190px;height:190px;opacity:.35" viewBox="0 0 200 200"><use href="#sb"/></svg>
+  <svg class="deco" style="bottom:-10px;right:-10px;width:180px;height:180px;opacity:.3;transform:scale(-1,-1)" viewBox="0 0 200 200"><use href="#sw"/></svg>
+  <div class="page-content">
+    <div class="result-wrap">
+      <div class="result-brand">Life in Four</div>
+      <div class="result-sub">此刻的你</div>
+
+      <!-- Share hint — appears above card when triggered -->
+      <div class="share-hint" id="shareHint">
+        <p>📸 <strong>請截圖下方結果卡片</strong><br>截圖後分享到 IG 限動或貼文，記得標記 <strong>@fugilife</strong> 🌿</p>
+      </div>
+
+      <!-- Share card -->
+      <div class="share-card" id="shareCard">
+        <svg class="card-deco card-tl" viewBox="0 0 200 200"><use href="#sb"/></svg>
+        <svg class="card-deco card-tr" viewBox="0 0 200 200"><use href="#sf"/></svg>
+        <svg class="card-deco card-bl" viewBox="0 0 200 200"><use href="#sw"/></svg>
+        <svg class="card-deco card-br" viewBox="0 0 200 200"><use href="#sb"/></svg>
+        <div class="card-head">
+          <div class="card-title">Life in Four</div>
+          <div class="card-stitle">Rooted · 此刻的我</div>
+        </div>
+        <div class="card-chart"><canvas id="radar" width="168" height="168"></canvas></div>
+        <div class="card-bars">
+          <div class="bar-item"><div class="bar-top"><span class="bar-name">💼 工作</span><span class="bar-num" id="rw">—</span></div><div class="bar-track"><div class="bar-fill bw" id="rbw"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span class="bar-name">🌿 遊戲</span><span class="bar-num" id="rp">—</span></div><div class="bar-track"><div class="bar-fill bp" id="rbp"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span class="bar-name">🌸 愛</span><span class="bar-num" id="rl">—</span></div><div class="bar-track"><div class="bar-fill bl" id="rbl"></div></div></div>
+          <div class="bar-item"><div class="bar-top"><span class="bar-name">🍃 健康</span><span class="bar-num" id="rh">—</span></div><div class="bar-track"><div class="bar-fill bh" id="rbh"></div></div></div>
+        </div>
+        <div class="card-foot">
+          <div class="card-preview" id="cardPreview"></div>
+          <div class="card-cta">喜歡這個工具？追蹤看更多</div>
+          <div class="card-handle">@fugilife</div>
+        </div>
+      </div>
+
+      <!-- Share hint -->
+      <!-- Insight -->
+      <div class="insight-box">
+        <div class="box-label">— 給此刻的你 —</div>
+        <div class="insight-body" id="insightBody"></div>
+      </div>
+
+      <!-- Prompts -->
+      <div class="prompt-box">
+        <div class="box-label">三個問題，帶回去想想</div>
+        <ul class="prompt-list" id="promptList"></ul>
+      </div>
+
+      <!-- Reflect -->
+      <div class="reflect-box">
+        <div class="box-label">— 誠實面對此刻的自己 —</div>
+        <p class="reflect-intro">對照你的四個指標，讓自己靜下來問幾個問題。<br>不需要馬上有答案，只是誠實地看見。</p>
+        <div class="reflect-grid" id="reflectGrid"></div>
+        <div class="balance-note"><strong>關於平衡</strong><br>人生不同階段，四個面向不可能完全均等——這是正常的。但當某個面向長期被忽略，失去平衡就會出問題。今天的評估，是你給自己的一面鏡子。</div>
+        <div class="rq-title">帶著這些問題繼續往前走</div>
+        <ul class="rq-list">
+          <li>現在這四個領域，你對哪個最滿意？哪個最不滿意？</li>
+          <li>有沒有某個面向，你已經知道需要採取行動，但一直在拖？</li>
+          <li>你發現了什麼棘手的問題？它背後真正的原因是什麼？</li>
+          <li>如果三個月後重新填一次，你希望哪個面向的分數不一樣？</li>
+        </ul>
+      </div>
+
+      <!-- Book card -->
+      <div class="book-card">
+        <div class="book-inner">
+          <div class="book-spine"></div>
+          <div class="book-body">
+            <div class="book-eye">這個設計構想來自</div>
+            <div class="book-title-tx">做自己的生命設計師</div>
+            <div class="book-auth"><em>Bill Burnett &amp; Dave Evans</em><br>比爾．博內特 ／ 戴夫．埃文斯　著</div>
+            <div class="book-rule"></div>
+            <div class="book-desc">如果你想更清楚地設計自己的人生——<br>了解如何找到真正適合自己的路，<br>這本書值得你細細閱讀。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page CTA -->
+      <div class="page-cta">
+        <p class="page-cta-text">
+          <em>這個工具對你有幫助嗎？</em><br>
+          追蹤 @fugilife，我們繼續聊<br>關於生命設計的事。
+        </p>
+        <a class="btn-threads" href="https://www.threads.com/@fugilife" target="_blank" rel="noopener">
+          到Threads 追蹤 Oli
+        </a>
+      </div>
+
+      <div class="result-nav">
+        <button class="btn-ig" onclick="shareIG()">截圖分享 IG 🌿</button>
+        <button class="btn-redo" onclick="startQuiz()">重新評估</button>
+      </div>
+      <div class="result-foot">@fugilife · Life in Four · Rooted</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// DATA
+const SECTIONS = [
+  {
+    key:'work', name:'工作', emoji:'💼',
+    sub:'有薪工作、家務、育兒、照顧父母、義工——凡你付出時間和心力的都算',
+    definition:`<strong>什麼算「工作」？</strong><br>
+      書裡說，工作不只是你領薪水的那份職業。有收入的工作算，沒有收入的也算——
+      做家務、帶孩子、照顧年邁的父母、擔任義工、經營自己的副業……
+      凡是你付出時間和心力去完成的事，都是你的工作指標。<br><br>
+      <strong>評估的核心問題：</strong>這些事讓你有意義感嗎？還是只是在消耗你？`,
+    guidePrompt:'讀完上面的說明，現在誠實回答三個問題，再為自己評分。',
+    qs:[
+      { t:'你現在做的事，早上起床時是什麼感覺？',
+        o:['很抗拒，能拖就拖','沒什麼感覺，就是去做','還好，偶爾有點期待','有些事讓我真的想趕快開始'] },
+      { t:'做完一件事之後，你通常的感覺是？',
+        o:['累，只想快點結束','完成了，但沒什麼特別感受','還不錯，有時會有成就感','滿足，覺得自己做了有意義的事'] },
+      { t:'你現在做的事，跟「你想成為的自己」有關係嗎？',
+        o:['完全沒關係，我只是在做該做的事','不確定，我還不太知道自己想成為什麼','有一點關係，但還不夠清晰','有關係，我感覺自己在往某個方向走'] }
+    ],
+    scoreLabel:'工作的意義感',
+    scoreLow:'消耗，沒有方向',
+    scoreHigh:'充實，有意義'
+  },
+  {
+    key:'play', name:'遊戲', emoji:'🌿',
+    sub:'單純為了樂趣而做，不為報酬——做了就感到快樂的事',
+    definition:`<strong>什麼算「遊戲」？</strong><br>
+      書裡對遊戲的定義很嚴格：光是去做，就會感受到樂趣的活動。
+      前提只有一個——單純為了樂趣，不是為了得到報酬、不是為了讓別人看見、
+      不是為了讓自己更好、更強、更有競爭力。<br><br>
+      如果你做一件事是「為了什麼」，那就不是遊戲。
+      <strong>只是因為你喜歡，才去做——這才叫遊戲。</strong>`,
+    guidePrompt:'讀完定義，想想你的生活裡有多少這樣的時刻，再回答下面三個問題。',
+    qs:[
+      { t:'你上一次做一件「沒有任何目的」的事，是什麼時候？',
+        o:['想不起來了','很久以前，可能幾個月前','最近有，但不多','這週就有'] },
+      { t:'你的休息時間通常是怎麼過的？',
+        o:['滑手機，但滑完感覺更空虛','做家事或處理雜事，沒有真正休息','有時候做自己喜歡的事，但常常被打斷','我有固定的事是真的讓我充電的'] },
+      { t:'你覺得「為自己玩」這件事，你允許自己嗎？',
+        o:['不太允許，總覺得應該先做完正事','知道應該，但常常找不到時間','偶爾會，但有時候會有罪惡感','我覺得玩是必要的，我會保護這個空間'] }
+    ],
+    scoreLabel:'生活裡純粹快樂的比例',
+    scoreLow:'幾乎沒有純粹的樂趣',
+    scoreHigh:'生活裡有豐富的快樂'
+  },
+  {
+    key:'love', name:'愛', emoji:'🌸',
+    sub:'伴侶、孩子、家人、朋友、寵物、社群——愛是雙向的，給予與接受同等重要',
+    definition:`<strong>什麼算「愛」？</strong><br>
+      書裡說，愛的對象很廣——親密伴侶、孩子、父母、朋友、周遭的人、
+      寵物、你所屬的社群，甚至任何你可以投射情感的事物。<br><br>
+      但有一點很關鍵：<strong>愛是雙向的。</strong>
+      給予愛和接受愛，同等重要。
+      如果你只是一直付出，從來感受不到被愛——
+      這個面向的儀表板，也會是低的。`,
+    guidePrompt:'想想你生命裡的各種關係，誠實回答下面三個問題。',
+    qs:[
+      { t:'在你最親近的關係裡，你通常是？',
+        o:['付出很多，但很少感覺被看見','維持表面，不太深入','有些關係滋養我，有些讓我很累','大部分的關係讓我感到被接納和支持'] },
+      { t:'當你需要幫助或支持的時候，你會？',
+        o:['自己消化，不想麻煩別人','偶爾說，但說了感覺也沒用','有一兩個人可以說，但不是每次都開口','我有可以說真話的人，說了之後會好一點'] },
+      { t:'你上一次感覺「被好好愛著」，是什麼時候？',
+        o:['想不太起來','很久了，可能超過半年','最近有，但是短暫的','最近就有，而且讓我印象深刻'] }
+    ],
+    scoreLabel:'愛的流動與滋養感',
+    scoreLow:'感覺孤立或一直付出',
+    scoreHigh:'在關係裡感到被愛'
+  },
+  {
+    key:'health', name:'健康', emoji:'🍃',
+    sub:'身體、情緒、睡眠的整體狀態',
+    definition:`<strong>什麼算「健康」？</strong><br>
+      書裡說，健康不只是身體有沒有生病——它包含三個層次：<br><br>
+      🌿 <strong>身</strong>——體力、睡眠、飲食、運動，你的身體實際的狀態<br>
+      🌿 <strong>心</strong>——情緒的穩定度、壓力的承受、內在的平靜感<br>
+      🌿 <strong>靈</strong>——你對生命意義的感受，與自己更深處的連結<br><br>
+      這三個層次，哪個對你最重要，由你自己決定。
+      評分的時候，不需要三個都完美——
+      而是誠實感受一下，<strong>整體來說，你有沒有在好好照顧自己？</strong><br><br>
+      書裡說：身體是你唯一真正擁有的家。
+      其他三個面向，都需要這個基礎來支撐。`,
+    guidePrompt:'考量身、心、靈三個層次，誠實感受一下你現在的整體狀態，再回答下面三個問題。',
+    qs:[
+      { t:'你的睡眠和體力，最近的狀況是？',
+        o:['很疲憊，睡再多也覺得累','還可以撐著，但明顯感覺在消耗','大部分還好，偶爾狀態差','整體不錯，精力還算充足'] },
+      { t:'你的情緒，最近的底色是什麼？',
+        o:['焦慮或低落，很難完全放鬆','麻木或平淡，沒什麼高低起伏','有好有壞，但還在自己可以承受的範圍','大致穩定，有情緒但不會被淹沒'] },
+      { t:'你有沒有在照顧自己的身體？',
+        o:['沒有，連基本的都做不到','偶爾，但斷斷續續，沒有真正在意','有一些習慣，但還不夠','我有固定在做的事，身體是我的優先'] }
+    ],
+    scoreLabel:'身心整體狀態',
+    scoreLow:'相當疲憊，需要照顧',
+    scoreHigh:'活力充沛，狀態穩定'
+  }
+];
+
+const SCORE_MAP=[[1,2],[3,4],[6,7],[9,10]];
+let curSec=0;
+let ans={work:[],play:[],love:[],health:[]};
+let scores={work:0,play:0,love:0,health:0};
+let selfScores={work:5,play:5,love:5,health:5};
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function startQuiz(){
+  curSec=0;
+  ans={work:[],play:[],love:[],health:[]};
+  scores={work:0,play:0,love:0,health:0};
+  selfScores={work:5,play:5,love:5,health:5};
+  showPage('page-quiz');
+  renderSec();
+}
+
+function nextSec(){
+  const sec=SECTIONS[curSec];
+  const a=ans[sec.key];
+  const filled=a.filter(x=>x!==undefined).length;
+  if(filled<3) return;
+  // Use self-score directly
+  scores[sec.key]=selfScores[sec.key];
+  if(curSec<3){ curSec++; renderSec(); }
+  else{ showPage('page-result'); renderResult(); }
+}
+
+function prevSec(){
+  if(curSec>0){ curSec--; renderSec(); }
+}
+
+function renderSec(){
+  const sec=SECTIONS[curSec];
+  const a=ans[sec.key];
+
+  // Scroll quiz wrap to top instantly
+  const wrap=document.getElementById('quizWrap');
+  wrap.scrollIntoView({behavior:'instant',block:'start'});
+  window.scrollTo({top:0,behavior:'instant'});
+
+  document.getElementById('progBar').style.width=(curSec/4*100)+'%';
+  document.getElementById('stepLabel').textContent=`${curSec+1} / 4 · ${sec.name}`;
+  document.getElementById('btnBack').style.display=curSec>0?'block':'none';
+  document.getElementById('btnTxt').textContent=curSec<3?'繼續 →':'看見此刻的我 →';
+
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i);
+    d.className='pdot';
+    if(i<curSec) d.classList.add('done');
+    else if(i===curSec) d.classList.add('active');
+  }
+
+  const area=document.getElementById('qArea');
+  area.innerHTML='';
+
+  // Dimension intro card
+  const intro=document.createElement('div');
+  intro.className='dim-intro';
+  intro.innerHTML=`
+    <div class="dim-intro-head">
+      <div class="dim-emoji">${sec.emoji}</div>
+      <div>
+        <div class="dim-name">${sec.name}</div>
+        <div class="dim-name-sub">${sec.sub}</div>
+      </div>
+    </div>
+    <div class="dim-definition">${sec.definition}</div>
+    <div class="dim-prompt">↓ ${sec.guidePrompt}</div>`;
+  area.appendChild(intro);
+
+  const letters=['A','B','C','D'];
+  sec.qs.forEach((q,qi)=>{
+    const blk=document.createElement('div');
+    blk.className='q-block';
+    blk.style.animationDelay=(qi*0.08)+'s';
+    blk.innerHTML=`
+      <div class="q-num">Q${qi+1}</div>
+      <div class="q-text">${q.t}</div>
+      <div class="choices" id="ch${qi}">
+        ${q.o.map((opt,oi)=>`
+        <button class="choice${a[qi]===oi?' sel':''}" onclick="pick(${qi},${oi})">
+          <span class="c-letter">${letters[oi]}</span>
+          <span class="c-text">${opt}</span>
+        </button>`).join('')}
+      </div>`;
+    area.appendChild(blk);
+    if(qi<2){
+      const sep=document.createElement('div');
+      sep.className='sep';
+      sep.innerHTML='<div class="sep-line"></div><div class="sep-dot">🌿</div><div class="sep-line"></div>';
+      area.appendChild(sep);
+    }
+  });
+
+  // Self-score block
+  const suggested=calcSuggestedScore(sec.key);
+  const ssBlock=document.createElement('div');
+  ssBlock.className='self-score-block';
+  ssBlock.id='selfScoreBlock';
+  const curVal=selfScores[sec.key];
+  ssBlock.innerHTML=`
+    <div class="ss-title">答完三題，現在為自己評分</div>
+    <div class="ss-sub">${sec.scoreLabel} · 根據你的回答，參考建議分數，再依自己的真實感受調整</div>
+    <div class="ss-suggest" id="suggestTxt">建議分數參考：<span id="suggestNum">—</span> 分（你可以自由調整）</div>
+    <div class="ss-slider-wrap">
+      <div class="ss-display">
+        <div class="ss-num" id="ssNum">${curVal}</div>
+        <div class="ss-num-label">/ 10</div>
+      </div>
+      <div class="ss-track">
+        <div class="ss-fill" id="ssFill" style="width:${(curVal-1)/9*100}%"></div>
+        <input class="ss-range" type="range" min="1" max="10" value="${curVal}" id="ssRange"
+          oninput="updateSelfScore(this.value)">
+      </div>
+      <div class="ss-labels"><span>${sec.scoreLow}</span><span>${sec.scoreHigh}</span></div>
+    </div>`;
+  area.appendChild(ssBlock);
+
+  // Show suggested score once all 3 answered
+  updateBtn();
+  if(a.filter(x=>x!==undefined).length===3) showSuggested(sec.key);
+}
+
+function calcSuggestedScore(key){
+  const a=ans[key];
+  const filled=a.filter(x=>x!==undefined);
+  if(filled.length===0) return 5;
+  let total=0;
+  a.forEach(v=>{ if(v!==undefined){ const r=SCORE_MAP[v]; total+=r[0]+Math.round((r[1]-r[0])/2); }});
+  return Math.round(total/filled.length);
+}
+
+function showSuggested(key){
+  const s=calcSuggestedScore(key);
+  const el=document.getElementById('suggestNum');
+  if(el) el.textContent=s;
+  // Set slider to suggested if user hasn't moved it yet
+  const range=document.getElementById('ssRange');
+  if(range && parseInt(range.value)===selfScores[key]){
+    selfScores[key]=s;
+    range.value=s;
+    updateSelfScore(s,false);
+  }
+}
+
+function updateSelfScore(val, saveToState=true){
+  const v=parseInt(val);
+  if(saveToState) selfScores[SECTIONS[curSec].key]=v;
+  const num=document.getElementById('ssNum');
+  const fill=document.getElementById('ssFill');
+  if(num) num.textContent=v;
+  if(fill) fill.style.width=((v-1)/9*100)+'%';
+}
+
+function pick(qi,oi){
+  const sec=SECTIONS[curSec];
+  ans[sec.key][qi]=oi;
+  document.getElementById('ch'+qi).querySelectorAll('.choice').forEach((b,i)=>{
+    b.classList.toggle('sel',i===oi);
+  });
+  updateBtn();
+  // Auto-scroll to next q
+  if(qi<2){
+    setTimeout(()=>{
+      const blocks=document.querySelectorAll('.q-block');
+      if(blocks[qi+1]) blocks[qi+1].scrollIntoView({behavior:'smooth',block:'center'});
+    },200);
+  }
+  // Once all 3 answered, scroll to self-score and show suggested
+  const filled=ans[sec.key].filter(x=>x!==undefined).length;
+  if(filled===3){
+    showSuggested(sec.key);
+    setTimeout(()=>{
+      const ssBlock=document.getElementById('selfScoreBlock');
+      if(ssBlock) ssBlock.scrollIntoView({behavior:'smooth',block:'center'});
+    },300);
+  }
+}
+
+function updateBtn(){
+  const sec=SECTIONS[curSec];
+  const filled=ans[sec.key].filter(x=>x!==undefined).length;
+  document.getElementById('btnNext').classList.toggle('on',filled===3);
+}
+
+function renderResult(){
+  const {work:w,play:p,love:l,health:h}=scores;
+  // Score bars on card
+  const keys=['work','play','love','health'];
+  const ids=['w','p','l','h'];
+  keys.forEach((k,i)=>{
+    document.getElementById('r'+ids[i]).textContent=scores[k];
+    setTimeout(()=>{ document.getElementById('rb'+ids[i]).style.width=(scores[k]/10*100)+'%'; },250);
+  });
+  setTimeout(()=>drawRadar(w,p,l,h),350);
+  const ins=getInsight(w,p,l,h);
+  document.getElementById('cardPreview').textContent=ins.preview;
+  document.getElementById('insightBody').innerHTML=ins.text;
+  document.getElementById('promptList').innerHTML=ins.prompts.map(q=>`<li>${q}</li>`).join('');
+  renderReflect();
+}
+
+function renderReflect(){
+  const items=[
+    {emoji:'💼',name:'工作',score:scores.work,color:'#A67C5B',feels:['幾乎沒有意義感','偶爾有些意義','有一定的投入感','充實且有方向']},
+    {emoji:'🌿',name:'遊戲',score:scores.play,color:'#6B8F6B',feels:['生活裡幾乎沒有純粹的快樂','偶爾有，但很短暫','有一些，但不夠','生活裡有真正的樂趣']},
+    {emoji:'🌸',name:'愛',score:scores.love,color:'#C4826A',feels:['感覺孤立或消耗','給得多，收得少','有些滋養，有些消耗','在關係裡感到被愛']},
+    {emoji:'🍃',name:'健康',score:scores.health,color:'#8FAF8F',feels:['身心都很疲憊','勉強撐著','狀態還可以','精力充沛且穩定']}
+  ];
+  const grid=document.getElementById('reflectGrid');
+  grid.innerHTML=items.map(it=>{
+    const fi=it.score<=3?0:it.score<=5?1:it.score<=7?2:3;
+    return `<div class="rc">
+      <div class="rc-icon">${it.emoji}</div>
+      <div class="rc-name">${it.name}</div>
+      <div class="rc-score">${it.score}</div>
+      <div class="rc-bar"><div class="rc-fill" data-w="${it.score*10}" style="background:${it.color}"></div></div>
+      <div class="rc-feel">${it.feels[fi]}</div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>{
+    document.querySelectorAll('.rc-fill').forEach(el=>{ el.style.width=el.dataset.w+'%'; });
+  },200);
+}
+
+function drawRadar(w,p,l,h){
+  const cv=document.getElementById('radar');
+  const ctx=cv.getContext('2d');
+  const S=168,cx=S/2,cy=S/2,R=60;
+  ctx.clearRect(0,0,S,S);
+  const vals=[w,p,l,h],cols=['#A67C5B','#6B8F6B','#C4826A','#8FAF8F'];
+  const ang=[-Math.PI/2,0,Math.PI/2,Math.PI];
+  const lbls=['工作','遊戲','愛','健康'];
+  for(let i=1;i<=5;i++){ctx.beginPath();ctx.arc(cx,cy,R*i/5,0,Math.PI*2);ctx.strokeStyle='rgba(166,124,91,.1)';ctx.lineWidth=1;ctx.stroke();}
+  ang.forEach(a=>{ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);ctx.strokeStyle='rgba(166,124,91,.13)';ctx.lineWidth=1;ctx.stroke();});
+  ctx.beginPath();
+  vals.forEach((v,i)=>{const r=v/10,x=cx+Math.cos(ang[i])*R*r,y=cy+Math.sin(ang[i])*R*r;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.closePath();ctx.fillStyle='rgba(107,143,107,.16)';ctx.fill();ctx.strokeStyle='#6B8F6B';ctx.lineWidth=1.5;ctx.stroke();
+  vals.forEach((v,i)=>{const r=v/10,x=cx+Math.cos(ang[i])*R*r,y=cy+Math.sin(ang[i])*R*r;ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle=cols[i];ctx.fill();ctx.strokeStyle='#FAF7F2';ctx.lineWidth=1.5;ctx.stroke();});
+  ctx.font='10px Noto Serif TC,serif';ctx.fillStyle='#6B4A36';ctx.textAlign='center';
+  lbls.forEach((lb,i)=>{const x=cx+Math.cos(ang[i])*(R+14),y=cy+Math.sin(ang[i])*(R+14)+4;ctx.fillText(lb,x,y);});
+}
+
+function shareIG(){
+  const hint = document.getElementById('shareHint');
+  hint.classList.add('visible');
+  // Small delay so hint renders before we scroll
+  setTimeout(()=>{
+    hint.scrollIntoView({behavior:'smooth', block:'start'});
+  }, 80);
+}
+
+function getInsight(w,p,l,h){
+  const avg=(w+p+l+h)/4,spread=Math.max(w,p,l,h)-Math.min(w,p,l,h);
+  let type='seeking';
+  if(avg>=7.5) type='flourishing';
+  else if(avg<=3.5) type='depleted';
+  else if(spread<=2) type='balanced_mid';
+  else if(w>=7&&p<=4) type='workaholic';
+  else if(w<=4&&p>=7) type='adrift';
+  else if(l>=7&&h<=4) type='giving_depleted';
+  else if(l<=4&&h>=7) type='self_protected';
+  else if(h<=4) type='body_forgotten';
+  else if(p<=4) type='play_forgotten';
+  else if(w>=7&&l>=7&&p<=4&&h<=4) type='overdrive';
+  else if(w<=4&&p<=4&&l>=7&&h>=7) type='nourished_waiting';
+  const db={
+    flourishing:{preview:'你現在站在一個很少人能站到的地方。',text:`<p>你現在的四個面向都在滋養你，這不是運氣——是你長期累積的結果。</p><div class="insight-pull">《做自己的生命設計師》提醒我們：當一切都好的時候，正是重新問自己「接下來想去哪裡」的最好時機。</div><p>不要等到某個面向開始漏電才行動。現在的充盈，是你往下一個人生版本投資的最好資源。</p>`,prompts:['你現在最想深化哪一個面向？','如果生命可以更豐盛，你還缺少什麼？','有沒有你一直想嘗試、但一直說「還不是時候」的事？']},
+    depleted:{preview:'你很誠實。這份誠實，已經是勇敢。',text:`<p>四個面向同時低落，不代表你失敗了。它代表你現在正在一個真實的低谷，而你選擇誠實地看見它。</p><div class="insight-pull">書裡說：「漏電不是弱點，是訊號。」你的身體和心，正在告訴你需要被好好對待。</div><p>從最小的一件事開始：今天，有沒有一件讓你感覺稍微輕一點的事，可以先做？不是改變全部，只是一步。</p>`,prompts:['四個面向裡，哪一個如果改善，你會感覺最不一樣？','上一次感覺「還不錯」是什麼時候？那時候有什麼不同？','你現在最需要的支持，是什麼形式的？']},
+    balanced_mid:{preview:'你的生命現在是平靜的，但也有些茫然。',text:`<p>四個面向都在中間地帶——不特別痛苦，但也沒有特別的光亮。這種感覺，很多人稱它為「還好」。</p><div class="insight-pull">書裡把這叫做「功能正常但沒有活著的感覺」——你在運轉，但有沒有在燃燒？</div><p>平靜不是問題，茫然才值得去探索。你的四個面向都有空間往上走，問題是：哪一個如果變好，你會感覺最活著？</p>`,prompts:['你上一次真的很興奮、很期待，是為了什麼事？','「還好」的背後，有沒有一個你一直在迴避的問題？','如果十年後的你回頭看現在，她會希望你做什麼不一樣的選擇？']},
+    workaholic:{preview:'你的付出很多，但你的快樂去哪了？',text:`<p>你在工作上很投入，有方向感，這是很珍貴的事。但你的遊戲分數低，說明你已經很久沒有純粹為了自己玩了。</p><div class="insight-pull">書裡說得很直接：「如果你只有工作，那你只有一條腿在站立。」遊戲不是浪費時間，它是讓你工作得更好的燃料。</div><p>你不需要大幅改變生活，只需要在這週找回一件純粹讓你快樂的事——不為結果，只為你自己。</p>`,prompts:['你上一次做一件「沒有目的」的事，是什麼？感覺怎麼樣？','如果工作突然消失三天，你第一件想做的事是什麼？','你的「遊戲」是什麼形狀的？你還記得嗎？']},
+    adrift:{preview:'你知道怎麼享受，但還在找自己的錨。',text:`<p>你的生活裡有樂趣，這很好。但工作面向偏低，可能代表你正在找一件讓你願意投入的事——或者你還不確定那件事是什麼。</p><div class="insight-pull">書裡說：「好奇心比熱情更可靠。」不要等待那個「天命」出現，先去做三件你有一點點好奇的事。</div><p>你現在的「漂著」，說不定是為下一個版本的你做準備。</p>`,prompts:['有沒有一件你說「以後再說」但其實很想嘗試的事？','你喜歡的那些「玩」，有沒有哪個可以變成你投入的方向？','你理想中的一個工作日，是什麼樣的？']},
+    giving_depleted:{preview:'你給了很多愛，但有沒有留一些給自己？',text:`<p>你在關係裡感到滋養，你也很願意付出——這是你很美的部分。但你的健康分數提醒我：你的身體和心，可能已經在悄悄透支。</p><div class="insight-pull">書裡說：「你不能一直輸出，卻忘記輸入。照顧自己，不是自私，是讓你可以繼續愛人。」</div><p>今天，你能不能為自己做一件事？不是為了任何人，只是因為你值得被照顧。</p>`,prompts:['你上一次好好休息，是什麼時候？','你在關係裡，有沒有說出你自己需要什麼？','如果你的身體可以說話，它現在最想要的是什麼？']},
+    self_protected:{preview:'你照顧好了自己，但愛還在外面等你。',text:`<p>你的健康狀態不錯，說明你懂得照顧自己。但愛的面向偏低，可能代表你在關係裡保持著一段距離——有時候是保護，有時候是孤單。</p><div class="insight-pull">書裡說：「連結是人類的基本需求，不是奢侈品。」靠近別人需要勇氣，但那個勇氣，你在健康裡已經養到了。</div><p>你有沒有一段關係，是你一直想要更深入，但不確定怎麼開始？</p>`,prompts:['你在什麼樣的關係裡感覺最自在、最真實？','有沒有一個人，你想更靠近，但一直在猶豫？','你覺得「被愛」和「被需要」，哪個讓你更有安全感？']},
+    body_forgotten:{preview:'你在很多地方都很好，只是忘了你的身體。',text:`<p>工作、愛、其他面向都在運作，但你的健康分數在提醒你：你的身體一直在等你注意它。</p><div class="insight-pull">書裡說：「身體是你唯一真正擁有的家。其他一切都可以重建，但這個家你只有一個。」</div><p>不需要大改變。只是問問自己：今天，我可以為我的身體做一件小事嗎？睡早一點、走出去呼吸一次，都算。</p>`,prompts:['你的睡眠和體力，最近是什麼狀態？','你上一次真正「動」你的身體，是什麼時候？','有沒有一個健康的習慣，是你一直想建立但還沒開始的？']},
+    play_forgotten:{preview:'你很努力，但你的內心小孩在哪裡？',text:`<p>你在工作上有投入，生活也有些支撐，但遊戲的空間很小。這可能是忙，也可能是你已經習慣把快樂排在最後。</p><div class="insight-pull">書裡說：「遊戲是大人也需要的。它讓你保持好奇、保持彈性、保持真實的自己。」</div><p>小時候的你，最喜歡做什麼？那個答案，說不定藏著你現在最缺的東西。</p>`,prompts:['小時候的你，最喜歡做什麼？','上一次你笑得很開心、很放鬆，是在做什麼？','這週，你可以給自己一個小時，做一件純粹好玩的事嗎？']},
+    overdrive:{preview:'你全力以赴，但你快燒完了。',text:`<p>工作和愛都很高，說明你是一個有投入、有在乎的人。但遊戲和健康都低，這個組合有一個名字：過度燃燒。</p><div class="insight-pull">書裡說：「持續輸出而沒有輸入，不是勤奮，是在消耗你未來的能量。你現在借用的，是明天的你。」</div><p>你不需要停下來，但你需要慢下來。哪怕只是今天的一個小時，只屬於你自己。</p>`,prompts:['如果你不得不休息，你最想做什麼？','你的「充電」是什麼樣子的？上一次充電是什麼時候？','你願意給自己什麼樣的許可，讓自己慢下來？']},
+    nourished_waiting:{preview:'你被愛滋養著，也很穩定，但有些什麼在等待被點燃。',text:`<p>你的愛和健康都很好，生命的土壤很肥沃。工作和遊戲偏低，可能代表你正在等待某個方向，或某個值得投入的事。</p><div class="insight-pull">書裡說：「好的土壤需要種子。你已經準備好了，問題是：你想種什麼？」</div><p>這個等待不是浪費，但它也在問你：有沒有一件事，你其實已經知道想做，只是還沒有行動？</p>`,prompts:['你最近有沒有一個想法或念頭，一直在腦子裡出現？','你覺得「工作」對你意味著什麼？它可以是什麼樣子？','如果沒有任何限制，你最想把時間花在什麼上面？']},
+    seeking:{preview:'你的生命正在移動，有些地方在生長，有些在等待。',text:`<p>你的四個面向各有高低，這不是問題，這是真實的人生。沒有人在所有面向都同時滿分，也不應該如此。</p><div class="insight-pull">書裡說：「生命設計不是找到完美的平衡，而是了解此刻的你，然後帶著意識往前走。」</div><p>你今天願意停下來看見自己，已經是很重要的一步。接下來的問題是：你最想讓哪個面向往前移一點？</p>`,prompts:['四個面向裡，哪一個如果改變，你的生活會最不同？','你現在的生活裡，什麼是你最不想失去的？','三個月後，你希望哪一個面向有了不同的答案？']}
+  };
+  return db[type]||db.seeking;
+}
+</script>
+</body>
+</html>
